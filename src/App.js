@@ -1,23 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import Header from './Components/Header';
+import AddTask from './Components/AddTask';
+import Task from './Components/Task';
+import uuid from 'uuid';
 
-function App() {
+class App extends Component {
+  state = {
+    main: [
+
+    ]
+  }
+  complete = (id) => {
+    this.setState({
+      main: this.state.main.map(item => {
+        if (item.id === id) {
+          item.done = !item.done;
+        } return item;
+      })
+    })
+  }
+  del = (id) => {
+    this.setState({ main: [...this.state.main.filter(item => item.id !== id)] });
+  }
+
+  addTask = (title) => {
+    const newItem = {
+      id: uuid.v4(),
+      title,
+      done: false
+    }
+    this.setState({ main: [...this.state.main, newItem] });
+  }
+  return(){
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <a
-          className="App-link"
-          href="https://bongohive.co.zm"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Welcome to Bongohive Consult, Hoping you can join us 😀
-        </a>
-      </header>
+      <Header />
+      <AddTask addTask={this.addTask} />
+      <Task value={this.state.main} markDone={this.complete} del={this.del} />
     </div>
   );
+}
 }
 
 export default App;
